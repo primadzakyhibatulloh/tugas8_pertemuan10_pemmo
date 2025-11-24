@@ -1,140 +1,122 @@
-# TokoKita Mobile App (Pertemuan 10)
+📦 TokoKita Mobile App (Pertemuan 10)
+Aplikasi TokoKita adalah implementasi antarmuka pengguna (UI) mobile menggunakan Flutter. Proyek ini mencakup alur autentikasi pengguna dan manajemen data produk (CRUD UI) dengan kustomisasi nama pada AppBar.
 
-Aplikasi TokoKita adalah proyek Flutter yang berfokus pada implementasi UI mobile dengan fitur autentikasi dan manajemen produk (CRUD).  
-Nama yang digunakan pada AppBar: **Prima**
+Nama Mahasiswa (AppBar): Prima
 
----
+📱 Struktur Fitur & Penjelasan Teknis Source Code
+Berikut adalah rincian mendalam mengenai implementasi kode pada setiap halaman.
 
-## Modul Autentikasi
+1. 🔑 Modul Autentikasi
+1.1. Halaman Login (ui/login_page.dart)
+Halaman ini menggunakan StatefulWidget karena perlu mengelola state loading dan input form.
 
-### Login (ui/login_page.dart)
+GlobalKey<FormState> _formKey: Digunakan untuk memvalidasi seluruh input dalam widget Form sebelum proses submit.
 
-**Alasan menggunakan StatefulWidget**
-- Membutuhkan state untuk loading.
-- Membutuhkan state untuk input form.
+TextEditingController: Variabel _emailTextboxController dan _passwordTextboxController digunakan untuk mengambil nilai teks dari input field.
 
-**Komponen Utama**
-- GlobalKey<FormState> untuk memvalidasi seluruh Form.
-- TextEditingController:
-  - _emailTextboxController  
-  - _passwordTextboxController  
-  Digunakan untuk mengambil nilai input.
+Validasi Input:
 
-**Validasi Input**
-Dilakukan melalui validator pada TextFormField:
+Menggunakan properti validator pada TextFormField
 
-```dart
-if (value!.isEmpty) {
-  return "Tidak boleh kosong";
-}
+Logika: Jika value!.isEmpty (kosong), maka pesan error dikembalikan
 
-Fungsi _submit()
+Fungsi _submit():
 
-Menjalankan validasi dengan _formKey.currentState!.validate().
+Memanggil _formKey.currentState!.validate()
 
-Menjalankan Future.delayed untuk simulasi loading.
+Menggunakan Future.delayed selama 2 detik untuk mensimulasikan jeda request API (Loading State)
 
-Navigasi ke halaman Registrasi menggunakan:
+Navigasi: Menggunakan Navigator.push pada widget InkWell (teks Registrasi) untuk berpindah halaman tanpa menghapus halaman Login dari stack
 
-Navigator.push(
-  context,
-  MaterialPageRoute(
-    builder: (context) => RegistrasiPage(),
-  ),
-);
+1.2. Halaman Registrasi (ui/registrasi_page.dart)
+Halaman ini memiliki validasi sisi klien yang lebih kompleks.
 
-Registrasi (ui/registrasi_page.dart)
+Validasi Regex (Email):
 
-Validasi Email (Regex)
-Memastikan format email mengandung karakter @ dan domain yang valid.
+Menggunakan pola Pattern dan RegExp di dalam validator email
 
-Validasi Password dan Konfirmasi
-Password konfirmasi dibandingkan dengan nilai controller:
+Tujuannya memastikan format email memiliki karakter '@' dan domain yang valid
 
-_passwordTextboxController.text
+Validasi Password & Konfirmasi:
 
+Field konfirmasi membandingkan nilai inputnya (value) dengan nilai dari controller password utama (_passwordTextboxController.text)
 
-Jika tidak sama → menampilkan pesan error.
+Jika tidak cocok (!=), return pesan error "Konfirmasi Password tidak sama"
 
-Fungsi _submit()
+Fungsi _submit():
 
-Menjalankan validasi dan save().
+Serupa dengan Login, fungsi ini menyimpan state form (save()) dan mensimulasikan proses pendaftaran
 
-Simulasi proses pendaftaran.
+Note: Pada implementasi nyata, setelah sukses akan memanggil Navigator.pop(context) untuk kembali ke Login
 
-Pada implementasi sebenarnya, diarahkan kembali ke Login:
+2. 🛒 Modul Manajemen Produk (Prima)
+2.1. List Produk (ui/produk_page.dart)
+Halaman utama yang menampilkan data dalam bentuk list.
 
-Navigator.pop(context);
+AppBar Kustom: Properti title diisi statis dengan Text('List Produk Prima')
 
-Modul Manajemen Produk
-List Produk (ui/produk_page.dart)
+Widget ListView: Digunakan untuk menampilkan daftar produk yang bisa di-scroll
 
-AppBar
-Teks statis: List Produk Prima.
+Navigasi Logout (PENTING):
 
-ListView
-Menampilkan daftar produk secara scroll.
+Pada Drawer > ListTile Logout
 
-Logout
-Menggunakan Navigator.pushReplacement() agar halaman Produk tidak bisa kembali dengan tombol Back.
+Menggunakan Navigator.pushReplacement
 
-Interaksi Item
-Item dibungkus GestureDetector untuk membuka halaman detail.
+Alasan: Fungsi ini menghapus halaman saat ini (ProdukPage) dari tumpukan (stack) navigasi dan menggantinya dengan LoginPage. Ini mencegah user kembali ke halaman produk dengan tombol "Back" setelah logout.
 
-Form Produk (ui/produk_form.dart)
+Interaksi Item: Setiap ItemProduk dibungkus dengan GestureDetector yang menangani event onTap untuk navigasi ke detail.
 
-Halaman ini digunakan untuk Tambah dan Edit produk.
+2.2. Form Produk (ui/produk_form.dart)
+Satu halaman yang menangani dua kondisi: Tambah (Create) dan Ubah (Update).
 
-Logika Tambah vs Edit
-Jika widget.produk != null → Mode Edit
-Jika widget.produk == null → Mode Tambah
+Logika initState & isUpdate:
 
-Mode Edit
+Saat halaman dimuat, fungsi ini mengecek parameter widget.produk
 
-AppBar: UBAH PRODUK PRIMA
+Jika widget.produk != null (Mode Edit):
 
-Tombol: UBAH
+Judul AppBar diubah menjadi "UBAH PRODUK PRIMA"
 
-Controller terisi data produk
+Tombol menjadi "UBAH"
 
-Mode Tambah
+Semua TextEditingController diisi nilai dari objek produk tersebut
 
-AppBar: TAMBAH PRODUK PRIMA
+Jika widget.produk == null (Mode Tambah):
 
-Tombol: SIMPAN
+Judul AppBar menjadi "TAMBAH PRODUK PRIMA"
 
-Form kosong
+Tombol "SIMPAN"
 
-Input Harga
-Menggunakan keyboard angka:
+Form dibiarkan kosong
 
-keyboardType: TextInputType.number
+Input Harga: Menggunakan TextInputType.number pada TextFormField agar keyboard yang muncul khusus angka.
 
-Detail Produk (ui/produk_detail.dart)
+2.3. Detail Produk (ui/produk_detail.dart)
+Halaman read-only yang menyediakan akses ke aksi Edit dan Delete.
 
-Passing Data
-Data produk dikirim melalui constructor.
+Passing Data: Halaman ini menerima objek Produk melalui constructor
 
-Display Data
-Menggunakan interpolasi string:
+Display Data: Menggunakan interpolasi string (contoh: "${widget.produk!.namaProduk}") untuk menampilkan data di widget Text
 
-"${widget.produk!.namaProduk}"
+Tombol Edit:
 
+Menggunakan Navigator.push menuju ProdukForm
 
-Tombol Edit
-Mengirim objek produk ke Form:
+Penting: Objek produk dikirim sebagai parameter (produk: widget.produk), sehingga Form otomatis mendeteksi mode "Ubah"
 
-ProdukForm(produk: widget.produk)
+Tombol Delete:
 
+Menggunakan fungsi showDialog untuk memunculkan AlertDialog
 
-Tombol Delete
-Menggunakan AlertDialog untuk konfirmasi penghapusan agar aman.
+Ini adalah praktik UX yang baik untuk mencegah penghapusan data yang tidak disengaja
 
-Instalasi
+🛠️ Instalasi & Menjalankan Aplikasi
+Pastikan Flutter SDK sudah terinstall
 
-Pastikan Flutter sudah terinstall.
+Clone repository ini
 
-Jalankan perintah berikut:
+Jalankan perintah di terminal:
 
 flutter pub get
 flutter run
