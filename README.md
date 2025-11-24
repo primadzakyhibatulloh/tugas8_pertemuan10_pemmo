@@ -1,114 +1,104 @@
-# 📦 TokoKita Mobile App (Pertemuan 10)
+# TokoKita Mobile App (Pertemuan 10)
 
-Aplikasi **TokoKita** adalah proyek Flutter yang berfokus pada implementasi UI dengan fitur autentikasi dan manajemen produk (CRUD).  
-Nama yang tampil pada AppBar adalah **Prima**.
-
----
-
-## ⭐ Badge Proyek
-![Flutter](https://img.shields.io/badge/Flutter-3.0+-blue?style=flat-square&logo=flutter)
-![Dart](https://img.shields.io/badge/Dart-Language-blue?style=flat-square&logo=dart)
-![Status](https://img.shields.io/badge/Status-Completed-brightgreen?style=flat-square)
+Aplikasi TokoKita adalah proyek Flutter yang berfokus pada implementasi UI mobile dengan fitur autentikasi dan manajemen produk (CRUD).  
+Nama yang digunakan pada AppBar: **Prima**
 
 ---
 
-# 📚 Struktur Fitur & Penjelasan Source Code
+## Modul Autentikasi
 
-Berikut penjelasan fungsi setiap modul dan halaman.
+### Login (ui/login_page.dart)
 
----
+**Alasan menggunakan StatefulWidget**
+- Membutuhkan state untuk loading.
+- Membutuhkan state untuk input form.
 
-# 1. 🔑 Modul Autentikasi
-
-## 1.1 Login (`ui/login_page.dart`)
-
-### Menggunakan StatefulWidget  
-Karena halaman ini membutuhkan:
-- State untuk loading
-- State untuk input form
-
-### Komponen Utama
-- **GlobalKey<FormState> _formKey**  
-  Untuk memvalidasi seluruh Form sekaligus.
-
-- **TextEditingController**  
-  - `_emailTextboxController`  
-  - `_passwordTextboxController`  
+**Komponen Utama**
+- GlobalKey<FormState> untuk memvalidasi seluruh Form.
+- TextEditingController:
+  - _emailTextboxController  
+  - _passwordTextboxController  
   Digunakan untuk mengambil nilai input.
 
-### Validasi Input  
-Dilakukan melalui `validator` pada TextFormField:
+**Validasi Input**
+Dilakukan melalui validator pada TextFormField:
 
 ```dart
-if (value!.isEmpty) return "Tidak boleh kosong";
-Fungsi _submit()
-Memanggil _formKey.currentState!.validate()
+if (value!.isEmpty) {
+  return "Tidak boleh kosong";
+}
 
-Simulasi API delay menggunakan Future.delayed(Duration(seconds: 2))
+Fungsi _submit()
+
+Menjalankan validasi dengan _formKey.currentState!.validate().
+
+Menjalankan Future.delayed untuk simulasi loading.
 
 Navigasi ke halaman Registrasi menggunakan:
 
-dart
-Copy code
-Navigator.push(context, MaterialPageRoute(builder: (_) => RegistrasiPage()));
-1.2 Registrasi (ui/registrasi_page.dart)
+Navigator.push(
+  context,
+  MaterialPageRoute(
+    builder: (context) => RegistrasiPage(),
+  ),
+);
+
+Registrasi (ui/registrasi_page.dart)
+
 Validasi Email (Regex)
-Regex memastikan format email mengandung @ + domain yang valid.
+Memastikan format email mengandung karakter @ dan domain yang valid.
 
 Validasi Password dan Konfirmasi
-Konfirmasi password dibandingkan dengan:
+Password konfirmasi dibandingkan dengan nilai controller:
 
-dart
-Copy code
 _passwordTextboxController.text
-Jika tidak sama → menampilkan error.
+
+
+Jika tidak sama → menampilkan pesan error.
 
 Fungsi _submit()
-Menjalankan validasi + save()
 
-Simulasi proses pendaftaran
+Menjalankan validasi dan save().
 
-Pada implementasi sebenarnya, diarahkan kembali ke Login menggunakan:
+Simulasi proses pendaftaran.
 
-dart
-Copy code
+Pada implementasi sebenarnya, diarahkan kembali ke Login:
+
 Navigator.pop(context);
-2. 🛒 Modul Manajemen Produk
-2.1 List Produk (ui/produk_page.dart)
-AppBar
-mathematica
-Copy code
-List Produk Prima
-ListView
-Menampilkan data produk secara scroll.
 
-Logout (Penting)
-Menggunakan Navigator.pushReplacement() agar halaman Produk hilang dari stack sehingga user tidak bisa kembali dengan tombol Back.
+Modul Manajemen Produk
+List Produk (ui/produk_page.dart)
+
+AppBar
+Teks statis: List Produk Prima.
+
+ListView
+Menampilkan daftar produk secara scroll.
+
+Logout
+Menggunakan Navigator.pushReplacement() agar halaman Produk tidak bisa kembali dengan tombol Back.
 
 Interaksi Item
-Item dibungkus GestureDetector untuk menavigasi ke detail produk.
+Item dibungkus GestureDetector untuk membuka halaman detail.
 
-2.2 Form Produk (ui/produk_form.dart)
-Satu halaman digunakan untuk:
+Form Produk (ui/produk_form.dart)
 
-Tambah Produk
+Halaman ini digunakan untuk Tambah dan Edit produk.
 
-Edit Produk
+Logika Tambah vs Edit
+Jika widget.produk != null → Mode Edit
+Jika widget.produk == null → Mode Tambah
 
-Logika Tambah vs Update
-Menggunakan pengecekan:
+Mode Edit
 
-dart
-Copy code
-if (widget.produk != null)
-Mode Update
 AppBar: UBAH PRODUK PRIMA
 
 Tombol: UBAH
 
-Controller otomatis terisi data
+Controller terisi data produk
 
 Mode Tambah
+
 AppBar: TAMBAH PRODUK PRIMA
 
 Tombol: SIMPAN
@@ -118,33 +108,33 @@ Form kosong
 Input Harga
 Menggunakan keyboard angka:
 
-dart
-Copy code
 keyboardType: TextInputType.number
-2.3 Detail Produk (ui/produk_detail.dart)
+
+Detail Produk (ui/produk_detail.dart)
+
 Passing Data
-Produk dikirim melalui constructor.
+Data produk dikirim melalui constructor.
 
-Display
-Menggunakan interpolasi string seperti:
+Display Data
+Menggunakan interpolasi string:
 
-dart
-Copy code
 "${widget.produk!.namaProduk}"
+
+
 Tombol Edit
-Mengirim produk kembali ke Form:
+Mengirim objek produk ke Form:
 
-dart
-Copy code
 ProdukForm(produk: widget.produk)
-Tombol Hapus
-Menggunakan showDialog() agar user memiliki konfirmasi terlebih dahulu sebelum menghapus data (UX yang aman).
 
-🛠️ Instalasi
+
+Tombol Delete
+Menggunakan AlertDialog untuk konfirmasi penghapusan agar aman.
+
+Instalasi
+
 Pastikan Flutter sudah terinstall.
 
-Jalankan:
-sh
-Copy code
+Jalankan perintah berikut:
+
 flutter pub get
 flutter run
