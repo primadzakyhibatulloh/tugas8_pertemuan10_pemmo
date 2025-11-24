@@ -1,106 +1,94 @@
-# 📦 TokoKita Mobile App — Flutter UI (Pertemuan 10)
+📦 TokoKita Mobile App (Pertemuan 10)
 
-Aplikasi **TokoKita** adalah implementasi antarmuka dasar Flutter yang mencakup:
-- 🔐 Modul Autentikasi (Login & Registrasi)
-- 🛒 Modul Manajemen Produk  
-Semua AppBar telah dikustomisasi dengan nama panggilan: **Prima**.
+Aplikasi TokoKita ini adalah implementasi antarmuka pengguna (UI) mobile menggunakan Flutter. Proyek ini mencakup alur autentikasi pengguna dan manajemen data produk (CRUD UI) dengan kustomisasi nama pada AppBar.
 
----
+Nama Mahasiswa (AppBar): Prima
 
----
+📱 Struktur Fitur & Penjelasan Teknis Source Code
 
-# 1️⃣ Modul Autentikasi
+Berikut adalah rincian mendalam mengenai implementasi kode pada setiap halaman.
 
-Mencakup halaman **Login** dan **Registrasi**, lengkap dengan validasi dan navigasi dasar.
+1. 🔑 Modul Autentikasi
 
----
+1.1. Halaman Login (ui/login_page.dart)
 
-## 1.1. Halaman Login  
-📁 *File:* `ui/login_page.dart`  
+Halaman ini menggunakan StatefulWidget karena perlu mengelola state loading dan input form.
+GlobalKey<FormState> _formKey: Digunakan untuk memvalidasi seluruh input dalam widget Form sebelum proses submit.
+TextEditingController: Variabel _emailTextboxController dan _passwordTextboxController digunakan untuk mengambil nilai teks dari input field.
 
-Halaman pertama saat aplikasi dibuka.
+Validasi Input:
 
-### ✅ Penjelasan Source Code
+Menggunakan properti validator pada TextFormField.
+Logika: Jika value!.isEmpty (kosong), maka pesan error dikembalikan.
 
-### **AppBar Title**
-```dart
-appBar: AppBar(
-  title: const Text("Login"),
-),
-Menampilkan judul halaman.
+Fungsi _submit():
 
+Memanggil _formKey.currentState!.validate().
+Menggunakan Future.delayed selama 2 detik untuk mensimulasikan jeda request API (Loading State).
+Navigasi: Menggunakan Navigator.push pada widget InkWell (teks Registrasi) untuk berpindah halaman tanpa menghapus halaman Login dari stack.
 
-State Management
-final _formKey = GlobalKey<FormState>();
-bool _isLoading = false;
-_formKey → validasi seluruh form
-_isLoading → mengontrol tombol saat loading
+1.2. Halaman Registrasi (ui/registrasi_page.dart)
 
+Halaman ini memiliki validasi sisi klien yang lebih kompleks.
+Validasi Regex (Email):
+Menggunakan pola Pattern dan RegExp di dalam validator email.
+Tujuannya memastikan format email memiliki karakter '@' dan domain yang valid.
 
-Form Input
-TextFormField(
-  controller: _emailController,
-  validator: (value) =>
-      value!.isEmpty ? "Email wajib diisi" : null,
-),
-Validator memastikan field tidak boleh kosong.
+Validasi Password & Konfirmasi:
 
-Aksi Login
-if (_formKey.currentState!.validate()) {
-  setState(() => _isLoading = true);
-  await Future.delayed(const Duration(seconds: 2));
-}
+Field konfirmasi membandingkan nilai inputnya (value) dengan nilai dari controller password utama (_passwordTextboxController.text).
+Jika tidak cocok (!=), return pesan error "Konfirmasi Password tidak sama".
 
+Fungsi _submit():
 
-Simulasi proses login selama 2 detik.
+Serupa dengan Login, fungsi ini menyimpan state form (save()) dan mensimulasikan proses pendaftaran.
+Note: Pada implementasi nyata, setelah sukses akan memanggil Navigator.pop(context) untuk kembali ke Login.
 
-Navigasi Registrasi
-InkWell(
-  onTap: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => RegistrasiPage()),
-    );
-  },
-),
-Memindahkan pengguna ke halaman registrasi.
+2. 🛒 Modul Manajemen Produk (Prima)
 
-1.2. Halaman Registrasi
+2.1. List Produk (ui/produk_page.dart)
 
-📁 File: ui/registrasi_page.dart
+Halaman utama yang menampilkan data dalam bentuk list.
+AppBar Kustom: Properti title diisi statis dengan Text('List Produk Prima').
+Widget ListView: Digunakan untuk menampilkan daftar produk yang bisa di-scroll.
+Navigasi Logout (PENTING):
+Pada Drawer > ListTile Logout.
+Menggunakan Navigator.pushReplacement.
 
-Digunakan untuk mendaftarkan pengguna baru.
+Alasan: Fungsi ini menghapus halaman saat ini (ProdukPage) dari tumpukan (stack) navigasi dan menggantinya dengan LoginPage. Ini mencegah user kembali ke halaman produk dengan tombol "Back" setelah logout.
+Interaksi Item: Setiap ItemProduk dibungkus dengan GestureDetector yang menangani event onTap untuk navigasi ke detail.
 
-✅ Penjelasan Source Code
-Validasi Nama
-validator: (value) =>
-  value!.length < 3 ? "Minimal 3 karakter" : null,
+2.2. Form Produk (ui/produk_form.dart)
 
-Validasi Email (Regex)
-validator: (value) {
-  String pattern =
-      r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$';
-  return !RegExp(pattern).hasMatch(value!)
-      ? "Format email tidak valid"
-      : null;
-},
+Satu halaman yang menangani dua kondisi: Tambah (Create) dan Ubah (Update).
+Logika initState & isUpdate():
+Saat halaman dimuat, fungsi ini mengecek parameter widget.produk.
+Jika widget.produk != null (Mode Edit): Judul AppBar diubah menjadi UBAH PRODUK PRIMA, tombol menjadi "UBAH", dan semua TextEditingController diisi nilai dari objek produk tersebut.
+Jika widget.produk == null (Mode Tambah): Judul AppBar menjadi TAMBAH PRODUK PRIMA, tombol "SIMPAN", dan form dibiarkan kosong.
+Input Harga: Menggunakan TextInputType.number pada TextFormField agar keyboard yang muncul khusus angka.
 
-Validasi Password & Konfirmasi
-validator: (value) =>
-  value!.length < 6 ? "Minimal 6 karakter" : null;
+2.3. Detail Produk (ui/produk_detail.dart)
 
+Halaman read-only yang menyediakan akses ke aksi Edit dan Delete.
+Passing Data: Halaman ini menerima objek Produk melalui constructor.
+Display Data: Menggunakan interpolasi string (contoh: "${widget.produk!.namaProduk}") untuk menampilkan data di widget Text.
 
-Konfirmasi password:
+Tombol Edit:
 
-validator: (value) =>
-  value != _passwordTextboxController.text
-      ? "Password tidak sama"
-      : null;
+Menggunakan Navigator.push menuju ProdukForm.
+Penting: Objek produk dikirim sebagai parameter (produk: widget.produk), sehingga Form otomatis mendeteksi mode "Ubah".
 
-Aksi Registrasi
-if (_formKey.currentState!.validate()) {
-  Navigator.pop(context);
-}
+Tombol Delete:
+
+Menggunakan fungsi showDialog untuk memunculkan AlertDialog.
+Ini adalah praktik UX yang baik untuk mencegah penghapusan data yang tidak disengaja.
+
+🛠️ Instalasi & Menjalankan Aplikasi
+
+Pastikan Flutter SDK sudah terinstall.
+Clone repository ini.
+Jalankan perintah di terminal:
 
 
-Setelah registrasi berhasil → kembali ke Login.
+flutter pub get
+flutter run
