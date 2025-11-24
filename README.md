@@ -32,15 +32,11 @@ Navigasi: Menggunakan Navigator.push pada widget InkWell (teks Registrasi) untuk
 Halaman ini memiliki validasi sisi klien yang lebih kompleks.
 
 Validasi Regex (Email):
-
 Menggunakan pola Pattern dan RegExp di dalam validator email.
-
 Tujuannya memastikan format email memiliki karakter '@' dan domain yang valid.
 
 Validasi Password & Konfirmasi:
-
 Field konfirmasi membandingkan nilai inputnya (value) dengan nilai dari controller password utama (_passwordTextboxController.text).
-
 Jika tidak cocok (!=), return pesan error "Konfirmasi Password tidak sama".
 
 Fungsi _submit():
@@ -50,7 +46,6 @@ Serupa dengan Login, fungsi ini menyimpan state form (save()) dan mensimulasikan
 Note: Pada implementasi nyata, setelah sukses akan memanggil Navigator.pop(context) untuk kembali ke Login.
 
 2. 🛒 Modul Manajemen Produk (Prima)
-
 2.1. List Produk (ui/produk_page.dart)
 
 Halaman utama yang menampilkan data dalam bentuk list.
@@ -66,7 +61,9 @@ Interaksi Item: Setiap ItemProduk dibungkus dengan GestureDetector yang menangan
 2.2. Form Produk (ui/produk_form.dart)
 
 Satu halaman yang menangani dua kondisi: Tambah (Create) dan Ubah (Update).
+
 Logika initState & isUpdate():
+
 Saat halaman dimuat, fungsi ini mengecek parameter widget.produk.
 Jika widget.produk != null (Mode Edit): Judul AppBar diubah menjadi UBAH PRODUK PRIMA, tombol menjadi "UBAH", dan semua TextEditingController diisi nilai dari objek produk tersebut.
 Jika widget.produk == null (Mode Tambah): Judul AppBar menjadi TAMBAH PRODUK PRIMA, tombol "SIMPAN", dan form dibiarkan kosong.
