@@ -96,14 +96,14 @@ flutter pub get
 flutter run
 
 
-<img width="1080" height="2400" alt="Screenshot_20251124_103705" src="https://github.com/user-attachments/assets/033873a4-1dc1-4c8a-83b9-c9b380623b8e" />
+<img src="https://github.com/user-attachments/assets/033873a4-1dc1-4f5b-ae07-fec811f80d6a" width="280" />
 
-<img width="1080" height="2400" alt="Screenshot_20251124_103654" src="https://github.com/user-attachments/assets/d69f6fd7-c0e5-4d7d-8931-ddf14c78e0bc" />
+<img src="https://github.com/user-attachments/assets/d69f6fd7-c0e5-4d7d-8931-ddf14c78e0bc" width="280" />
 
-<img width="1080" height="2400" alt="Screenshot_20251124_103644" src="https://github.com/user-attachments/assets/01874f6d-26f4-4fbf-9d47-67516d32f172" />
+<img src="https://github.com/user-attachments/assets/01874f6d-26f4-4fbf-9d47-67516d32f172" width="280" />
 
-<img width="1080" height="2400" alt="Screenshot_20251124_103632" src="https://github.com/user-attachments/assets/556afcc9-a055-4336-8fcd-b049b3934830" />
+<img src="https://github.com/user-attachments/assets/556afcc9-a055-4336-8fcd-b049b3934830" width="280" />
 
-<img width="1080" height="2400" alt="Screenshot_20251124_103557" src="https://github.com/user-attachments/assets/55be910e-096a-410d-8535-d77203d32b5d" />
+<img src="https://github.com/user-attachments/assets/55be910e-096a-410d-8535-d77203d32b5d" width="280" />
 
 
