@@ -96,7 +96,8 @@ flutter pub get
 flutter run
 
 
-<img src="https://github.com/user-attachments/assets/033873a4-1dc1-4f5b-ae07-fec811f80d6a" width="280" />
+<img src="https://github.com/user-attachments/assets/1814417e-f014-41fa-b128-d8ed592dfba3" width="280" />
+
 
 <img src="https://github.com/user-attachments/assets/d69f6fd7-c0e5-4d7d-8931-ddf14c78e0bc" width="280" />
 
